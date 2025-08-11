@@ -1,5 +1,8 @@
 # URL Shortener (Kotlin + Spring Boot)
 
+## Improvements
+ - originalUrl length can be increased
+
 ## Running locally on your machine
 ### Open a terminal (Bash), navigate to the project’s root folder, and run:
 ```bash
