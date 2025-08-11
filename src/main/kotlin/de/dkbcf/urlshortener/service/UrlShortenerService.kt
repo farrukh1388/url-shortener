@@ -9,6 +9,7 @@ import de.dkbcf.urlshortener.util.ShortCodeGenerator
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
 @Service
@@ -32,6 +33,7 @@ class UrlShortenerService(
         return ShortenUrlResponse(properties.baseUrl + shortCode)
     }
 
+    @Cacheable("urls")
     fun resolve(shortCode: String): String {
         log.debug("Resolving short code: {} to original URL", shortCode)
         return repository.getUrlEntityByShortCode(shortCode)

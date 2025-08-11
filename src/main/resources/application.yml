@@ -8,6 +8,10 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:urlshortenerdb}
     username: ${DB_USER}
     password: ${DB_PASS}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   jpa:
     hibernate:
       ddl-auto: update
