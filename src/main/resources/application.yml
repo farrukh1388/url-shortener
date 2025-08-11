@@ -30,3 +30,12 @@ logging:
     de:
       dkbcf:
         urlshortener: info
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+    jmx:
+      exposure:
+        include: health
