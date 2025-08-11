@@ -1,20 +1,21 @@
 package de.dkbcf.urlshortener.dto
 
-import jakarta.validation.constraints.NotBlank
 import java.net.MalformedURLException
 import java.net.URI
 import java.net.URISyntaxException
 
 data class ShortenUrlRequest(
-    @field:NotBlank
-    val originalUrl: String
+    val originalUrl: String? = null
 ) {
     init {
         require(validateOriginalUrl(originalUrl)) { "Invalid URL format" }
     }
 }
 
-fun validateOriginalUrl(originalUrl: String): Boolean {
+fun validateOriginalUrl(originalUrl: String?): Boolean {
+    if (originalUrl.isNullOrBlank()) {
+        return false
+    }
     try {
         URI(originalUrl).toURL()
         return true

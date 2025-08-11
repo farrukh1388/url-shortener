@@ -20,7 +20,7 @@ class UrlShortenerService(
     private val log = LoggerFactory.getLogger(UrlShortenerService::class.java)
 
     fun shortenUrl(request: ShortenUrlRequest): ShortenUrlResponse {
-        val originalUrl = request.originalUrl
+        val originalUrl = request.originalUrl!!
         log.debug("Shortening URL: {}", originalUrl)
         val shortCode = ShortCodeGenerator.generate(originalUrl, properties.shortCodeSize)
         val existing = repository.getUrlEntityByShortCode(shortCode)
