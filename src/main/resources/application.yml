@@ -12,3 +12,14 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+url-shortener:
+  base-url: https://bit.any/
+  short-code-size: 8
+
+logging:
+  level:
+    root: info
+    de:
+      dkbcf:
+        urlshortener: info
