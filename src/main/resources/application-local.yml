@@ -3,3 +3,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/urlshortenerdb?currentSchema=public
     username: postgres
     password: pass
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+url-shortener:
+  base-url: http://localhost:8080/api/v1/
