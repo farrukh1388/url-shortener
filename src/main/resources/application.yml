@@ -21,7 +21,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 url-shortener:
-  base-url: https://bit.any/
+  base-url: https://bit.any/api/v1/
   short-code-size: 8
 
 logging:

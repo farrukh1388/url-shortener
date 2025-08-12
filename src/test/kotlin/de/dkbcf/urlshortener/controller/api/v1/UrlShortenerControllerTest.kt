@@ -1,4 +1,4 @@
-package de.dkbcf.urlshortener.controller
+package de.dkbcf.urlshortener.controller.api.v1
 
 import de.dkbcf.urlshortener.dto.ShortenUrlRequest
 import de.dkbcf.urlshortener.dto.ShortenUrlResponse

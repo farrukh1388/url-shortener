@@ -34,5 +34,8 @@ docker-compose -f docker-compose.yml up --build -d
 - http://localhost:8080/swagger-ui.html
 
 ##
-## Improvements
-- originalUrl length can be increased
+## Assumptions and improvements
+- originalUrl field length in entity can be increased to handle long urls
+- To find bottlenecks or slow requests we can use Micrometer metric
+- Short code generator could be upgraded by reducing the character set used only to letters and digits to avoid short codes like "ig-glNd-"
+- Input field sanitizers can be added to increase security
