@@ -76,6 +76,38 @@ class UrlShortenerServiceTest {
     }
 
     @Test
+    fun `should return increased in size shortened url and create new entity`() {
+        val originalUrl = "https://example.com/examples"
+        val urlWithSimilarHash = "https://urlWithSimilarHash.com"
+        val shortCodeSize = 6
+        val baseUrl = "https://bit.any/"
+        val request = ShortenUrlRequest(originalUrl)
+
+        `when`(properties.shortCodeSize).thenReturn(shortCodeSize)
+        `when`(properties.baseUrl).thenReturn(baseUrl)
+        `when`(repository.getUrlEntityByShortCode(anyString())).thenAnswer {
+            Optional.of(
+                UrlEntity(
+                    shortCode = it.arguments[0].toString(),
+                    originalUrl = urlWithSimilarHash
+                )
+            )
+        }.thenAnswer { Optional.empty<UrlEntity>() }
+
+        val response = service.shortenUrl(request)
+
+        assertThat(response).isNotNull
+        assertThat(response.shortUrl).startsWith(baseUrl)
+        assertThat(response.shortUrl.substringAfter(baseUrl)).hasSize(shortCodeSize + 1)
+
+        verify(
+            repository,
+            times(1)
+        ).save(argThat { it.shortCode.length == shortCodeSize + 1 && it.originalUrl == originalUrl })
+        verify(repository, times(2)).getUrlEntityByShortCode(anyString())
+    }
+
+    @Test
     fun `should resolve short code to original url when mapping exists`() {
         val originalUrl = "https://example.com/examples"
         val shortCode = "kW34ty7r"
