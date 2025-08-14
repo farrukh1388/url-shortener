@@ -3,21 +3,15 @@ package de.dkbcf.urlshortener.entity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.Index
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 import java.util.Objects
-import org.hibernate.annotations.UuidGenerator
 
 @Entity
-@Table(name = "url_mappings", indexes = [Index(name = "idx_short_code", columnList = "short_code", unique = true)])
+@Table(name = "url_mappings")
 data class UrlMapping(
     @Id
-    @UuidGenerator
-    @Column(length = 36)
-    val id: String? = null,
-
-    @Column(nullable = false, name = "short_code", length = 32, unique = true)
+    @Column(nullable = false, name = "short_code", length = 256)
     val shortCode: String,
 
     @Column(nullable = false, name = "original_url", length = 2048)

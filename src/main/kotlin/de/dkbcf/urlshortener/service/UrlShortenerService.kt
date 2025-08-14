@@ -27,7 +27,7 @@ class UrlShortenerService(
         var shortCode: String
         do {
             shortCode = ShortCodeGenerator.generate(originalUrl, shortCodeSize)
-            val existingOptional = repository.getUrlMappingByShortCode(shortCode)
+            val existingOptional = repository.findById(shortCode)
             if (existingOptional.isEmpty) {
                 log.debug("Creating mapping {} -> {}", shortCode, originalUrl)
                 repository.save(UrlMapping(shortCode = shortCode, originalUrl = originalUrl))
@@ -49,7 +49,7 @@ class UrlShortenerService(
     @Cacheable("urls")
     fun resolve(shortCode: String): String {
         log.debug("Resolving short code: {} to original URL", shortCode)
-        return repository.getUrlMappingByShortCode(shortCode)
+        return repository.findById(shortCode)
             .orElseThrow { EntityNotFoundException("Short code not found") }.originalUrl
     }
 }

@@ -31,7 +31,7 @@ class UrlShortenerServiceTest {
 
         `when`(properties.shortCodeSize).thenReturn(shortCodeSize)
         `when`(properties.baseUrl).thenReturn(baseUrl)
-        `when`(repository.getUrlMappingByShortCode(anyString())).thenReturn(Optional.empty())
+        `when`(repository.findById(anyString())).thenReturn(Optional.empty())
 
         val response = service.shortenUrl(request)
 
@@ -54,7 +54,7 @@ class UrlShortenerServiceTest {
 
         `when`(properties.shortCodeSize).thenReturn(shortCodeSize)
         `when`(properties.baseUrl).thenReturn(baseUrl)
-        `when`(repository.getUrlMappingByShortCode(anyString())).thenAnswer {
+        `when`(repository.findById(anyString())).thenAnswer {
             Optional.of(
                 UrlMapping(
                     shortCode = it.arguments[0].toString(),
@@ -85,7 +85,7 @@ class UrlShortenerServiceTest {
 
         `when`(properties.shortCodeSize).thenReturn(shortCodeSize)
         `when`(properties.baseUrl).thenReturn(baseUrl)
-        `when`(repository.getUrlMappingByShortCode(anyString())).thenAnswer {
+        `when`(repository.findById(anyString())).thenAnswer {
             Optional.of(
                 UrlMapping(
                     shortCode = it.arguments[0].toString(),
@@ -104,7 +104,7 @@ class UrlShortenerServiceTest {
             repository,
             times(1)
         ).save(argThat { it.shortCode.length == shortCodeSize + 1 && it.originalUrl == originalUrl })
-        verify(repository, times(2)).getUrlMappingByShortCode(anyString())
+        verify(repository, times(2)).findById(anyString())
     }
 
     @Test
@@ -112,7 +112,7 @@ class UrlShortenerServiceTest {
         val originalUrl = "https://example.com/examples"
         val shortCode = "kW34ty7r"
 
-        `when`(repository.getUrlMappingByShortCode(shortCode)).thenReturn(
+        `when`(repository.findById(shortCode)).thenReturn(
             Optional.of(
                 UrlMapping(
                     shortCode = shortCode,
@@ -130,7 +130,7 @@ class UrlShortenerServiceTest {
     @Test
     fun `should throw exception when mapping do not exists`() {
         val shortCode = "kW34ty7r"
-        `when`(repository.getUrlMappingByShortCode(shortCode)).thenReturn(Optional.empty())
+        `when`(repository.findById(shortCode)).thenReturn(Optional.empty())
 
         val thrown = assertThrows<EntityNotFoundException> { service.resolve(shortCode) }
 
