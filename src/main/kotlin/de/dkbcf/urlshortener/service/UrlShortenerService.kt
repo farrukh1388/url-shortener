@@ -23,12 +23,25 @@ class UrlShortenerService(
     fun shortenUrl(request: ShortenUrlRequest): ShortenUrlResponse {
         val originalUrl = request.originalUrl!!
         log.debug("Shortening URL: {}", originalUrl)
-        val shortCode = ShortCodeGenerator.generate(originalUrl, properties.shortCodeSize)
-        val existing = repository.getUrlEntityByShortCode(shortCode)
-        if (existing.isEmpty) {
-            log.debug("Creating mapping {} -> {}", shortCode, originalUrl)
-            repository.save(UrlEntity(shortCode = shortCode, originalUrl = originalUrl))
-        }
+        var shortCodeSize = properties.shortCodeSize
+        var shortCode: String
+        do {
+            shortCode = ShortCodeGenerator.generate(originalUrl, shortCodeSize)
+            val existingOptional = repository.getUrlEntityByShortCode(shortCode)
+            if (existingOptional.isEmpty) {
+                log.debug("Creating mapping {} -> {}", shortCode, originalUrl)
+                repository.save(UrlEntity(shortCode = shortCode, originalUrl = originalUrl))
+                break
+            } else {
+                val existing = existingOptional.get()
+                if (existing.originalUrl == originalUrl) {
+                    break
+                } else {
+                    shortCodeSize++
+                    continue
+                }
+            }
+        } while (true)
 
         return ShortenUrlResponse(properties.baseUrl + shortCode)
     }

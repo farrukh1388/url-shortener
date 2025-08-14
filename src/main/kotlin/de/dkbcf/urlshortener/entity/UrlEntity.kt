@@ -17,7 +17,7 @@ data class UrlEntity(
     @Column(length = 36)
     val id: String? = null,
 
-    @Column(nullable = false, name = "short_code", length = 10, unique = true)
+    @Column(nullable = false, name = "short_code", length = 32, unique = true)
     val shortCode: String,
 
     @Column(nullable = false, name = "original_url", length = 2048)
