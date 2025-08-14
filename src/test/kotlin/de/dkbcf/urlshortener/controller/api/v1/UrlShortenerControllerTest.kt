@@ -28,7 +28,7 @@ class UrlShortenerControllerTest(
         val shortUrl = "https://bit.any/kW34ty7r"
         `when`(service.shortenUrl(request)).thenReturn(ShortenUrlResponse(shortUrl))
 
-        mockMvc.post("/api/v1/shorten") {
+        mockMvc.post("/api/v1/shorten-url") {
             contentType = MediaType.APPLICATION_JSON
             content = """
                         {
@@ -51,7 +51,7 @@ class UrlShortenerControllerTest(
         """{"originalUrl": "files://domain.com"}""",
     )
     fun `should return 400 when request is invalid`(request: String) {
-        mockMvc.post("/api/v1/shorten") {
+        mockMvc.post("/api/v1/shorten-url") {
             contentType = MediaType.APPLICATION_JSON
             content = request
         }.andExpect {

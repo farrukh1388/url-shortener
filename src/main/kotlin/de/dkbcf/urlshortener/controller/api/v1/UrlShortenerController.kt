@@ -34,7 +34,7 @@ class UrlShortenerController(private val service: UrlShortenerService) {
             ApiResponse(responseCode = "400", description = "Invalid URL")
         ]
     )
-    @PostMapping("/shorten")
+    @PostMapping("/shorten-url")
     fun shortenUrl(@RequestBody request: ShortenUrlRequest): ShortenUrlResponse {
         return service.shortenUrl(request)
     }
