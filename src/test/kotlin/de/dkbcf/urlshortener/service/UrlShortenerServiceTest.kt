@@ -1,9 +1,9 @@
 package de.dkbcf.urlshortener.service
 
 import de.dkbcf.urlshortener.dto.ShortenUrlRequest
-import de.dkbcf.urlshortener.entity.UrlEntity
+import de.dkbcf.urlshortener.entity.UrlMapping
 import de.dkbcf.urlshortener.properties.UrlShortenerProperties
-import de.dkbcf.urlshortener.repository.UrlEntityRepository
+import de.dkbcf.urlshortener.repository.UrlMappingRepository
 import jakarta.persistence.EntityNotFoundException
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
@@ -18,7 +18,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 
 class UrlShortenerServiceTest {
-    private val repository: UrlEntityRepository = mock(UrlEntityRepository::class.java)
+    private val repository: UrlMappingRepository = mock(UrlMappingRepository::class.java)
     private val properties: UrlShortenerProperties = mock(UrlShortenerProperties::class.java)
     private val service = UrlShortenerService(repository = repository, properties = properties)
 
@@ -31,7 +31,7 @@ class UrlShortenerServiceTest {
 
         `when`(properties.shortCodeSize).thenReturn(shortCodeSize)
         `when`(properties.baseUrl).thenReturn(baseUrl)
-        `when`(repository.getUrlEntityByShortCode(anyString())).thenReturn(Optional.empty())
+        `when`(repository.getUrlMappingByShortCode(anyString())).thenReturn(Optional.empty())
 
         val response = service.shortenUrl(request)
 
@@ -54,9 +54,9 @@ class UrlShortenerServiceTest {
 
         `when`(properties.shortCodeSize).thenReturn(shortCodeSize)
         `when`(properties.baseUrl).thenReturn(baseUrl)
-        `when`(repository.getUrlEntityByShortCode(anyString())).thenAnswer {
+        `when`(repository.getUrlMappingByShortCode(anyString())).thenAnswer {
             Optional.of(
-                UrlEntity(
+                UrlMapping(
                     shortCode = it.arguments[0].toString(),
                     originalUrl = originalUrl
                 )
@@ -72,7 +72,7 @@ class UrlShortenerServiceTest {
         verify(
             repository,
             times(0)
-        ).save(any(UrlEntity::class.java))
+        ).save(any(UrlMapping::class.java))
     }
 
     @Test
@@ -85,14 +85,14 @@ class UrlShortenerServiceTest {
 
         `when`(properties.shortCodeSize).thenReturn(shortCodeSize)
         `when`(properties.baseUrl).thenReturn(baseUrl)
-        `when`(repository.getUrlEntityByShortCode(anyString())).thenAnswer {
+        `when`(repository.getUrlMappingByShortCode(anyString())).thenAnswer {
             Optional.of(
-                UrlEntity(
+                UrlMapping(
                     shortCode = it.arguments[0].toString(),
                     originalUrl = urlWithSimilarHash
                 )
             )
-        }.thenAnswer { Optional.empty<UrlEntity>() }
+        }.thenAnswer { Optional.empty<UrlMapping>() }
 
         val response = service.shortenUrl(request)
 
@@ -104,7 +104,7 @@ class UrlShortenerServiceTest {
             repository,
             times(1)
         ).save(argThat { it.shortCode.length == shortCodeSize + 1 && it.originalUrl == originalUrl })
-        verify(repository, times(2)).getUrlEntityByShortCode(anyString())
+        verify(repository, times(2)).getUrlMappingByShortCode(anyString())
     }
 
     @Test
@@ -112,9 +112,9 @@ class UrlShortenerServiceTest {
         val originalUrl = "https://example.com/examples"
         val shortCode = "kW34ty7r"
 
-        `when`(repository.getUrlEntityByShortCode(shortCode)).thenReturn(
+        `when`(repository.getUrlMappingByShortCode(shortCode)).thenReturn(
             Optional.of(
-                UrlEntity(
+                UrlMapping(
                     shortCode = shortCode,
                     originalUrl = originalUrl
                 )
@@ -130,7 +130,7 @@ class UrlShortenerServiceTest {
     @Test
     fun `should throw exception when mapping do not exists`() {
         val shortCode = "kW34ty7r"
-        `when`(repository.getUrlEntityByShortCode(shortCode)).thenReturn(Optional.empty())
+        `when`(repository.getUrlMappingByShortCode(shortCode)).thenReturn(Optional.empty())
 
         val thrown = assertThrows<EntityNotFoundException> { service.resolve(shortCode) }
 

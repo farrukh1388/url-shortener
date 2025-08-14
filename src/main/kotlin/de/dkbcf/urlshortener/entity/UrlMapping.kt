@@ -10,8 +10,8 @@ import java.util.Objects
 import org.hibernate.annotations.UuidGenerator
 
 @Entity
-@Table(name = "urls", indexes = [Index(name = "idx_short_code", columnList = "short_code", unique = true)])
-data class UrlEntity(
+@Table(name = "url_mappings", indexes = [Index(name = "idx_short_code", columnList = "short_code", unique = true)])
+data class UrlMapping(
     @Id
     @UuidGenerator
     @Column(length = 36)
@@ -29,8 +29,8 @@ data class UrlEntity(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
-        val otherUrlEntity: UrlEntity = other as UrlEntity
-        return otherUrlEntity.shortCode == shortCode && otherUrlEntity.createdAt == createdAt
+        val otherUrlMapping: UrlMapping = other as UrlMapping
+        return otherUrlMapping.shortCode == shortCode && otherUrlMapping.createdAt == createdAt
     }
 
     override fun hashCode(): Int {
